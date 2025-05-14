@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="initial:tables:taxi" author="andreykinn20" context="main">
+        <sqlFile path="tables/taxi.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <sqlFile path="tables/rollback_taxi.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="initial:tables:order" author="andreykinn20" context="main">
+        <sqlFile path="tables/order.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <sqlFile path="tables/rollback_order.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="initial:data:load_taxis" author="andreykinn20" context="test">
+        <sqlFile path="data/load_taxis_test.sql" relativeToChangelogFile="true"/>
+        <rollback/>
+    </changeSet>
+
+</databaseChangeLog>
