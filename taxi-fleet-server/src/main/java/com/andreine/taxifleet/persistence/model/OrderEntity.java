@@ -1,15 +1,16 @@
 package com.andreine.taxifleet.persistence.model;
 
 import java.time.Instant;
+
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -25,19 +26,25 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "order")
+@Table(name = "booking")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class OrderEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
 
     @Column(nullable = false)
-    private Integer userId;
+    private Long userId;
 
-    @Embedded
-    private Location location;
+    private Double originLatitude;
+
+    private Double originLongitude;
+
+    private Double destinationLatitude;
+
+    private Double destinationLongitude;
 
     private Long taxiId;
 

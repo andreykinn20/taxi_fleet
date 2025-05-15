@@ -6,6 +6,8 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -27,14 +29,16 @@ import lombok.Setter;
 public class TaxiEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
 
     @Column(nullable = false)
     private Integer ownerId;
 
-    @Embedded
-    private Location location;
+    private Double latitude;
+
+    private Double longitude;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

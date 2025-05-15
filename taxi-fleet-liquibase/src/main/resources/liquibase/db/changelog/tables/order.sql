@@ -1,15 +1,16 @@
-CREATE TABLE order
+CREATE TABLE booking
 (
     id                    bigserial PRIMARY KEY,
     user_id               integer          NOT NULL,
-    taxi_id               integer REFERENCES products (taxi),
+    taxi_id               integer REFERENCES taxi (id),
     origin_latitude       double precision NOT NULL,
     origin_longitude      double precision NOT NULL,
     destination_latitude  double precision NOT NULL,
     destination_longitude double precision NOT NULL,
-    status                varying(10)      NOT NULL,
+    status                character(10)    NOT NULL,
     created_on            timestamp(3)     NOT NULL,
-    updated_on            timestamp(3)
+    updated_on            timestamp(3),
+    version               integer          NOT NULL
 );
 
-CREATE INDEX order_status ON order (status);
+CREATE INDEX order_status ON booking (status);
