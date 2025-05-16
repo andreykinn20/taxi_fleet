@@ -83,21 +83,30 @@ class PublicApiTest extends BaseFunctionalTest {
 
     @Test
     void shouldGetTaxiBookings() {
+        var taxi1 = taxi()
+            .name("Taxi A")
+            .registeredOn(Instant.ofEpochMilli(100500))
+            .build();
+        var taxi2 = taxi()
+            .name("Taxi B")
+            .registeredOn(Instant.ofEpochMilli(100500))
+            .build();
+        var savedTaxis = taxiRepository.saveAll(List.of(taxi1, taxi2));
+
         var booking1 = booking()
             .build();
         var booking2 = booking()
-            .taxiId(1L)
+            .taxiId(savedTaxis.getFirst().getId())
             .build();
         var booking3 = booking()
-            .taxiId(2L)
+            .taxiId(savedTaxis.getLast().getId())
             .build();
-
         bookingRepository.saveAll(List.of(booking1, booking2, booking3));
 
         var taxiBookings = given()
             .when()
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .get("/public/taxi/{taxiId}/bookings", 1L)
+            .get("/public/taxi/{taxiId}/bookings", savedTaxis.getFirst().getId())
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract()
@@ -122,6 +131,7 @@ class PublicApiTest extends BaseFunctionalTest {
     private TaxiEntity.TaxiEntityBuilder taxi() {
         return TaxiEntity.builder()
             .name("Taxi")
+            .status(TaxiStatus.AVAILABLE)
             .registeredOn(Instant.ofEpochMilli(100500));
     }
 

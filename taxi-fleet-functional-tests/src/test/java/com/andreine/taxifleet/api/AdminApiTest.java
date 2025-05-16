@@ -5,9 +5,6 @@ import java.util.List;
 
 import com.andreine.taxifleet.BaseFunctionalTest;
 import com.andreine.taxifleet.controller.adminapi.model.TaxiDto;
-import com.andreine.taxifleet.controller.publicapi.model.BookingDto;
-import com.andreine.taxifleet.persistence.model.BookingEntity;
-import com.andreine.taxifleet.persistence.model.BookingStatus;
 import com.andreine.taxifleet.persistence.model.TaxiEntity;
 import com.andreine.taxifleet.persistence.model.TaxiStatus;
 import io.restassured.common.mapper.TypeRef;
