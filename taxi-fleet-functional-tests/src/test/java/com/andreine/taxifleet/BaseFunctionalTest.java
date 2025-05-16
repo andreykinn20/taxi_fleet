@@ -3,9 +3,9 @@ package com.andreine.taxifleet;
 import com.andreine.taxifleet.config.SingletonPostgresContainer;
 import com.andreine.taxifleet.persistence.repository.BookingRepository;
 import com.andreine.taxifleet.persistence.repository.TaxiRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -34,5 +34,11 @@ public class BaseFunctionalTest {
 
     @Autowired
     protected TaxiRepository taxiRepository;
+
+    @AfterEach
+    void tearDown() {
+        bookingRepository.deleteAll();
+        taxiRepository.deleteAll();
+    }
 
 }

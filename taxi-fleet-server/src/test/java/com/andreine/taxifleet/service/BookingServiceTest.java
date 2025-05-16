@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import com.andreine.taxifleet.model.MonthlyBookingStats;
 import com.andreine.taxifleet.persistence.model.BookingEntity;
 import com.andreine.taxifleet.persistence.model.BookingStatus;
 import com.andreine.taxifleet.persistence.repository.BookingRepository;
@@ -61,6 +62,23 @@ class BookingServiceTest {
         assertThat(taxiBookings).hasSize(2);
         assertThat(taxiBookings.getFirst().id()).isEqualTo(1L);
         assertThat(taxiBookings.getLast().id()).isEqualTo(2L);
+    }
+
+    @Test
+    void shouldGetMonthlyBookingStats() {
+        var monthlyBookingStats = List.of(
+            MonthlyBookingStats.builder()
+                .year(2025)
+                .month(1)
+                .totalBookings(200)
+                .completedBookings(150)
+                .cancelledBookings(20)
+                .build());
+
+        when(bookingRepository.getMonthlyStats()).thenReturn(monthlyBookingStats);
+
+        assertThat(bookingService.getMonthlyBookingStats())
+            .isEqualTo(monthlyBookingStats);
     }
 
     private BookingEntity.BookingEntityBuilder bookingEntity() {

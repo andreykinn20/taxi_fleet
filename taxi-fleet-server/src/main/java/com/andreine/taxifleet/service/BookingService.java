@@ -3,6 +3,7 @@ package com.andreine.taxifleet.service;
 import java.util.List;
 
 import com.andreine.taxifleet.converter.BookingConverter;
+import com.andreine.taxifleet.model.MonthlyBookingStats;
 import com.andreine.taxifleet.persistence.repository.BookingRepository;
 import com.andreine.taxifleet.service.model.Booking;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,15 @@ public class BookingService {
         return bookingRepository.findByTaxi(taxiId).stream()
             .map(BookingConverter::convert)
             .toList();
+    }
+
+    /**
+     * Gets monthly bookings statistics.
+     *
+     * @return monthly bookings statistics
+     */
+    public List<MonthlyBookingStats> getMonthlyBookingStats() {
+        return bookingRepository.getMonthlyStats();
     }
 
 }
