@@ -1,8 +1,8 @@
 package com.andreine.taxifleet.service;
 
-import com.andreine.taxifleet.exception.BookingNotAvailableException;
 import com.andreine.taxifleet.exception.BookingNotFoundException;
-import com.andreine.taxifleet.exception.TaxiNotAvailableException;
+import com.andreine.taxifleet.exception.IllegalBookingStatusException;
+import com.andreine.taxifleet.exception.IllegalTaxiStatusException;
 import com.andreine.taxifleet.exception.TaxiNotFoundException;
 import com.andreine.taxifleet.persistence.model.BookingEntity;
 import com.andreine.taxifleet.persistence.model.BookingStatus;
@@ -43,11 +43,11 @@ public class TaxiBookingManagementService {
             .orElseThrow(() -> new TaxiNotFoundException(bookingId));
 
         if (!BookingStatus.AVAILABLE.equals(booking.getStatus())) {
-            throw new BookingNotAvailableException(bookingId);
+            throw new IllegalBookingStatusException("Booking %s is not available".formatted(bookingId));
         }
 
         if (!TaxiStatus.AVAILABLE.equals(taxi.getStatus())) {
-            throw new TaxiNotAvailableException(taxiId);
+            throw new IllegalTaxiStatusException("Taxi %s is not available".formatted(taxiId));
         }
 
         bookingRepository.save(booking.toBuilder()

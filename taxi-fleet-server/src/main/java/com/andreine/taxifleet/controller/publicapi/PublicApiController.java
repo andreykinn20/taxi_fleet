@@ -6,6 +6,7 @@ import com.andreine.taxifleet.controller.publicapi.model.BookingDto;
 import com.andreine.taxifleet.converter.BookingConverter;
 import com.andreine.taxifleet.service.BookingService;
 import com.andreine.taxifleet.service.TaxiBookingManagementService;
+import com.andreine.taxifleet.service.TaxiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,8 @@ public class PublicApiController {
     private final TaxiBookingManagementService taxiBookingManagementService;
 
     private final BookingService bookingService;
+
+    private final TaxiService taxiService;
 
     /**
      * POST /taxi/{taxiId}/bookings/{bookingId}/accept: accepts booking by the taxi.
@@ -66,6 +69,19 @@ public class PublicApiController {
             .toList();
 
         return ResponseEntity.ok(availableBookings);
+    }
+
+    /**
+     * POST /taxi/{taxiId}/status/available: sets taxi status to available.
+     *
+     * @param taxiId taxi id (required)
+     * @return OK (status code 200)
+     */
+    @PostMapping("/public/taxi/{taxiId}/status/unavailable")
+    public ResponseEntity<Void> setTaxiUnavailable(@PathVariable Long taxiId) {
+        taxiService.setTaxiUnavailable(taxiId);
+
+        return ResponseEntity.noContent().build();
     }
 
 }

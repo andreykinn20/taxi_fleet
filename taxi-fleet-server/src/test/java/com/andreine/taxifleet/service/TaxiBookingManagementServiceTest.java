@@ -1,11 +1,10 @@
 package com.andreine.taxifleet.service;
 
-import java.time.Instant;
 import java.util.Optional;
 
-import com.andreine.taxifleet.exception.BookingNotAvailableException;
 import com.andreine.taxifleet.exception.BookingNotFoundException;
-import com.andreine.taxifleet.exception.TaxiNotAvailableException;
+import com.andreine.taxifleet.exception.IllegalBookingStatusException;
+import com.andreine.taxifleet.exception.IllegalTaxiStatusException;
 import com.andreine.taxifleet.exception.TaxiNotFoundException;
 import com.andreine.taxifleet.persistence.model.BookingEntity;
 import com.andreine.taxifleet.persistence.model.BookingStatus;
@@ -75,7 +74,7 @@ public class TaxiBookingManagementServiceTest {
 
         assertThatExceptionOfType(BookingNotFoundException.class)
             .isThrownBy(throwingCallable)
-            .withMessage("Booking with ID 1 is not found");
+            .withMessage("Booking 1 is not found");
     }
 
     @Test
@@ -95,9 +94,9 @@ public class TaxiBookingManagementServiceTest {
 
         ThrowableAssert.ThrowingCallable throwingCallable = () -> taxiBookingManagementService.acceptBooking(1L, 1L);
 
-        assertThatExceptionOfType(BookingNotAvailableException.class)
+        assertThatExceptionOfType(IllegalBookingStatusException.class)
             .isThrownBy(throwingCallable)
-            .withMessage("Booking with ID 1 is not available");
+            .withMessage("Booking 1 is not available");
     }
 
     @Test
@@ -114,7 +113,7 @@ public class TaxiBookingManagementServiceTest {
 
         assertThatExceptionOfType(TaxiNotFoundException.class)
             .isThrownBy(throwingCallable)
-            .withMessage("Taxi with ID 1 is not found");
+            .withMessage("Taxi 1 is not found");
     }
 
     @Test
@@ -134,9 +133,9 @@ public class TaxiBookingManagementServiceTest {
 
         ThrowableAssert.ThrowingCallable throwingCallable = () -> taxiBookingManagementService.acceptBooking(1L, 1L);
 
-        assertThatExceptionOfType(TaxiNotAvailableException.class)
+        assertThatExceptionOfType(IllegalTaxiStatusException.class)
             .isThrownBy(throwingCallable)
-            .withMessage("Taxi with ID 1 is not available for booking");
+            .withMessage("Taxi 1 is not available");
     }
 
 }

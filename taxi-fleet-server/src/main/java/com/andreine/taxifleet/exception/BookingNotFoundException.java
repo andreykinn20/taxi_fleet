@@ -6,7 +6,7 @@ package com.andreine.taxifleet.exception;
 public class BookingNotFoundException extends RuntimeException {
 
     public BookingNotFoundException(Long bookingId) {
-        super("Booking with ID %s is not found".formatted(bookingId));
+        super("Booking %s is not found".formatted(bookingId));
     }
 
 }

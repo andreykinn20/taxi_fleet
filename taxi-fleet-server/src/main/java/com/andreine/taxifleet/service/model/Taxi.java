@@ -20,7 +20,7 @@ public record Taxi(
     public enum TaxiStatus {
         AVAILABLE,
         BOOKED,
-        INACTIVE
+        UNAVAILABLE
     }
 
 }
