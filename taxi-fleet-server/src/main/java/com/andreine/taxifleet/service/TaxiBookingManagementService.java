@@ -60,4 +60,35 @@ public class TaxiBookingManagementService {
             .build());
     }
 
+    /**
+     * Completes booking for the taxi.
+     *
+     * @param taxiId    taxi id
+     * @param bookingId booking id
+     */
+    @Transactional
+    public void completeBooking(Long taxiId, Long bookingId) {
+        BookingEntity booking = bookingRepository.findById(bookingId)
+            .orElseThrow(() -> new BookingNotFoundException(bookingId));
+
+        TaxiEntity taxi = taxiRepository.findById(taxiId)
+            .orElseThrow(() -> new TaxiNotFoundException(bookingId));
+
+        if (!BookingStatus.ACCEPTED.equals(booking.getStatus())) {
+            throw new IllegalBookingStatusException("Booking %s is not in progress".formatted(bookingId));
+        }
+
+        if (!TaxiStatus.BOOKED.equals(taxi.getStatus())) {
+            throw new IllegalTaxiStatusException("Taxi %s is not booked".formatted(taxiId));
+        }
+
+        bookingRepository.save(booking.toBuilder()
+            .status(BookingStatus.COMPLETED)
+            .build());
+
+        taxiRepository.save(taxi.toBuilder()
+            .status(TaxiStatus.AVAILABLE)
+            .build());
+    }
+
 }

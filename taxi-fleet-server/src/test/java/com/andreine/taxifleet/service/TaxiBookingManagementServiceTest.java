@@ -138,4 +138,107 @@ public class TaxiBookingManagementServiceTest {
             .withMessage("Taxi 1 is not available");
     }
 
+    @Test
+    void shouldCompleteBooking() {
+        var taxi = TaxiEntity.builder()
+            .id(1L)
+            .name("Taxi 1")
+            .status(TaxiStatus.BOOKED)
+            .build();
+        var booking = BookingEntity.builder()
+            .id(1L)
+            .status(BookingStatus.ACCEPTED)
+            .build();
+        var completedTaxi = TaxiEntity.builder()
+            .id(1L)
+            .name("Taxi 1")
+            .status(TaxiStatus.AVAILABLE)
+            .build();
+        var completedBooking = BookingEntity.builder()
+            .id(1L)
+            .taxiId(1L)
+            .status(BookingStatus.COMPLETED)
+            .build();
+
+        when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
+        when(taxiRepository.findById(1L)).thenReturn(Optional.of(taxi));
+
+        taxiBookingManagementService.completeBooking(1L, 1L);
+
+        verify(bookingRepository).save(completedBooking);
+        verify(taxiRepository).save(completedTaxi);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCompleteBookingIfBookingIsNotFound() {
+        when(bookingRepository.findById(1L)).thenReturn(Optional.empty());
+
+        ThrowableAssert.ThrowingCallable throwingCallable = () -> taxiBookingManagementService.completeBooking(1L, 1L);
+
+        assertThatExceptionOfType(BookingNotFoundException.class)
+            .isThrownBy(throwingCallable)
+            .withMessage("Booking 1 is not found");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCompleteBookingIfBookingIsNotAccepted() {
+        var booking = BookingEntity.builder()
+            .id(1L)
+            .status(BookingStatus.AVAILABLE)
+            .build();
+        var taxi = TaxiEntity.builder()
+            .id(1L)
+            .name("Taxi 1")
+            .status(TaxiStatus.BOOKED)
+            .build();
+
+        when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
+        when(taxiRepository.findById(1L)).thenReturn(Optional.of(taxi));
+
+        ThrowableAssert.ThrowingCallable throwingCallable = () -> taxiBookingManagementService.completeBooking(1L, 1L);
+
+        assertThatExceptionOfType(IllegalBookingStatusException.class)
+            .isThrownBy(throwingCallable)
+            .withMessage("Booking 1 is not in progress");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCompleteBookingIfTaxiIsNotFound() {
+        var booking = BookingEntity.builder()
+            .id(1L)
+            .status(BookingStatus.ACCEPTED)
+            .build();
+
+        when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
+        when(taxiRepository.findById(1L)).thenReturn(Optional.empty());
+
+        ThrowableAssert.ThrowingCallable throwingCallable = () -> taxiBookingManagementService.completeBooking(1L, 1L);
+
+        assertThatExceptionOfType(TaxiNotFoundException.class)
+            .isThrownBy(throwingCallable)
+            .withMessage("Taxi 1 is not found");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCompleteBookingIfTaxiIsNotBooked() {
+        var booking = BookingEntity.builder()
+            .id(1L)
+            .status(BookingStatus.ACCEPTED)
+            .build();
+        var taxi = TaxiEntity.builder()
+            .id(1L)
+            .name("Taxi 1")
+            .status(TaxiStatus.AVAILABLE)
+            .build();
+
+        when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
+        when(taxiRepository.findById(1L)).thenReturn(Optional.of(taxi));
+
+        ThrowableAssert.ThrowingCallable throwingCallable = () -> taxiBookingManagementService.completeBooking(1L, 1L);
+
+        assertThatExceptionOfType(IllegalTaxiStatusException.class)
+            .isThrownBy(throwingCallable)
+            .withMessage("Taxi 1 is not booked");
+    }
+
 }

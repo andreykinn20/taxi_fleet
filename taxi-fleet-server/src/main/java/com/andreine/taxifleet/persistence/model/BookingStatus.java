@@ -6,5 +6,5 @@ package com.andreine.taxifleet.persistence.model;
 public enum BookingStatus {
     AVAILABLE,
     ACCEPTED,
-    FINISHED
+    COMPLETED
 }

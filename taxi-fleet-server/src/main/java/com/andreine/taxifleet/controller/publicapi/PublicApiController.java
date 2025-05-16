@@ -97,4 +97,18 @@ public class PublicApiController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * POST /taxi/{taxiId}/status/available: completes booking.
+     *
+     * @param taxiId    taxi id (required)
+     * @param bookingId booking id (required)
+     * @return OK (status code 200)
+     */
+    @PostMapping("/public/taxi/{taxiId}/bookings/{bookingId}/complete")
+    public ResponseEntity<Void> completeBooking(@PathVariable Long taxiId, @PathVariable Long bookingId) {
+        taxiBookingManagementService.completeBooking(taxiId, bookingId);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }
