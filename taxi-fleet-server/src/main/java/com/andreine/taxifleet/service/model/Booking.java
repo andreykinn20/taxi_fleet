@@ -3,21 +3,24 @@ package com.andreine.taxifleet.service.model;
 import lombok.Builder;
 
 /**
- * Order.
+ * Booking.
  */
 @Builder
-public record Order(
+public record Booking(
     long id,
     long userId,
     Location fromLocation,
     Location toLocation,
     Long taxiId,
-    OrderStatus status,
+    BookingStatus status,
     long createdOnTs,
     Long updatedOnTs
 ) {
 
-    public enum OrderStatus {
+    /**
+     * Booking status.
+     */
+    public enum BookingStatus {
         AVAILABLE,
         BOOKED,
         FINISHED

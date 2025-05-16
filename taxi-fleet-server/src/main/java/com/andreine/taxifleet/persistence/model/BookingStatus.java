@@ -1,7 +1,10 @@
 package com.andreine.taxifleet.persistence.model;
 
-public enum OrderStatus {
+/**
+ * Booking status.
+ */
+public enum BookingStatus {
     AVAILABLE,
-    BOOKED,
+    ACCEPTED,
     FINISHED
 }

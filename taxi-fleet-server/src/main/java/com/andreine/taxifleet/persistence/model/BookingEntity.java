@@ -20,6 +20,9 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+/**
+ * Booking entity.
+ */
 @Entity
 @Getter
 @Setter
@@ -28,7 +31,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @AllArgsConstructor
 @Table(name = "booking")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class OrderEntity {
+public class BookingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,7 +53,7 @@ public class OrderEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private OrderStatus status;
+    private BookingStatus status;
 
     @CreationTimestamp
     private Instant createdOn;

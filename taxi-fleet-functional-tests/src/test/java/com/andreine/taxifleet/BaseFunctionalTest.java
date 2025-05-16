@@ -1,6 +1,7 @@
 package com.andreine.taxifleet;
 
-import com.andreine.taxifleet.persistence.repository.OrderRepository;
+import com.andreine.taxifleet.persistence.repository.BookingRepository;
+import com.andreine.taxifleet.persistence.repository.TaxiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -34,6 +35,9 @@ public class BaseFunctionalTest {
     }
 
     @Autowired
-    protected OrderRepository orderRepository;
+    protected BookingRepository bookingRepository;
+
+    @Autowired
+    protected TaxiRepository taxiRepository;
 
 }

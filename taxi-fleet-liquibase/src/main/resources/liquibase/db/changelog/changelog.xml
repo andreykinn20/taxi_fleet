@@ -12,10 +12,10 @@
         </rollback>
     </changeSet>
 
-    <changeSet id="initial:tables:order" author="andreykinn20" context="main">
-        <sqlFile path="tables/order.sql" relativeToChangelogFile="true"/>
+    <changeSet id="initial:tables:booking" author="andreykinn20" context="main">
+        <sqlFile path="tables/booking.sql" relativeToChangelogFile="true"/>
         <rollback>
-            <sqlFile path="tables/rollback_order.sql" relativeToChangelogFile="true"/>
+            <sqlFile path="tables/rollback_booking.sql" relativeToChangelogFile="true"/>
         </rollback>
     </changeSet>
 

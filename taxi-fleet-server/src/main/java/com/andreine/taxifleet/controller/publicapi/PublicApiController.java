@@ -1,0 +1,71 @@
+package com.andreine.taxifleet.controller.publicapi;
+
+import java.util.List;
+
+import com.andreine.taxifleet.controller.publicapi.model.BookingDto;
+import com.andreine.taxifleet.converter.BookingConverter;
+import com.andreine.taxifleet.service.BookingService;
+import com.andreine.taxifleet.service.TaxiBookingManagementService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * Public api controller.
+ */
+@RestController
+@RequestMapping
+@RequiredArgsConstructor
+public class PublicApiController {
+
+    private final TaxiBookingManagementService taxiBookingManagementService;
+
+    private final BookingService bookingService;
+
+    /**
+     * POST /taxi/{taxiId}/bookings/{bookingId}/accept: accepts booking by the taxi.
+     *
+     * @param taxiId    (required)
+     * @param bookingId (required)
+     * @return OK (status code 200)
+     */
+    @PostMapping("/public/taxi/{taxiId}/bookings/{bookingId}/accept")
+    public ResponseEntity<Void> acceptBooking(@PathVariable Long taxiId, @PathVariable Long bookingId) {
+        taxiBookingManagementService.acceptBooking(taxiId, bookingId);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * GET /public/taxi/{taxiId}/bookings": Gets bookings for the taxi.
+     *
+     * @param taxiId taxi id (required)
+     * @return OK (status code 200)
+     */
+    @GetMapping("/public/taxi/{taxiId}/bookings")
+    public ResponseEntity<List<BookingDto>> getBookings(@PathVariable Long taxiId) {
+        var taxiBookings = bookingService.getTaxiBookings(taxiId).stream()
+            .map(BookingConverter::convert)
+            .toList();
+
+        return ResponseEntity.ok(taxiBookings);
+    }
+
+    /**
+     * GET /public/bookings/available: Gets available bookings.
+     *
+     * @return OK (status code 200)
+     */
+    @GetMapping("/public/bookings/available")
+    public ResponseEntity<List<BookingDto>> getAvailableBookings() {
+        var availableBookings = bookingService.getAvailableBookings().stream()
+            .map(BookingConverter::convert)
+            .toList();
+
+        return ResponseEntity.ok(availableBookings);
+    }
+
+}

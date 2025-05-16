@@ -13,4 +13,4 @@ CREATE TABLE booking
     version               integer          NOT NULL
 );
 
-CREATE INDEX order_status ON booking (status);
+CREATE INDEX booking_status ON booking (status);
