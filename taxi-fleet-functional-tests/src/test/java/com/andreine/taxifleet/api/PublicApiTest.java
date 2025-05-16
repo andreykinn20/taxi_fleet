@@ -118,6 +118,50 @@ class PublicApiTest extends BaseFunctionalTest {
         assertThat(taxiBookings.getFirst().id()).isEqualTo(booking2.getId());
     }
 
+    @Test
+    void shouldSetTaxiUnavailable() {
+        var taxi = taxi()
+            .status(TaxiStatus.AVAILABLE)
+            .build();
+
+        var savedTaxi = taxiRepository.save(taxi);
+
+        given()
+            .when()
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .post("/public/taxi/{taxiId}/status/unavailable", savedTaxi.getId())
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
+
+        assertThat(taxiRepository.findById(savedTaxi.getId()))
+            .hasValueSatisfying(unavailableTaxi -> {
+                assertThat(unavailableTaxi.getId()).isEqualTo(savedTaxi.getId());
+                assertThat(unavailableTaxi.getStatus()).isEqualTo(TaxiStatus.UNAVAILABLE);
+            });
+    }
+
+    @Test
+    void shouldSetTaxiAvailable() {
+        var taxi = taxi()
+            .status(TaxiStatus.UNAVAILABLE)
+            .build();
+
+        var savedTaxi = taxiRepository.save(taxi);
+
+        given()
+            .when()
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .post("/public/taxi/{taxiId}/status/available", savedTaxi.getId())
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
+
+        assertThat(taxiRepository.findById(savedTaxi.getId()))
+            .hasValueSatisfying(unavailableTaxi -> {
+                assertThat(unavailableTaxi.getId()).isEqualTo(savedTaxi.getId());
+                assertThat(unavailableTaxi.getStatus()).isEqualTo(TaxiStatus.AVAILABLE);
+            });
+    }
+
     private BookingEntity.BookingEntityBuilder booking() {
         return BookingEntity.builder()
             .userId(1L)

@@ -84,4 +84,17 @@ public class PublicApiController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * POST /taxi/{taxiId}/status/available: sets taxi status to available.
+     *
+     * @param taxiId taxi id (required)
+     * @return OK (status code 200)
+     */
+    @PostMapping("/public/taxi/{taxiId}/status/available")
+    public ResponseEntity<Void> setTaxiAvailable(@PathVariable Long taxiId) {
+        taxiService.setTaxiAvailable(taxiId);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }
