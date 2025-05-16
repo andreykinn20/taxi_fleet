@@ -6,6 +6,7 @@ import com.andreine.taxifleet.controller.adminapi.model.TaxiDto;
 import com.andreine.taxifleet.converter.TaxiConverter;
 import com.andreine.taxifleet.service.TaxiService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,10 +21,11 @@ public class AdminApiController {
     private final TaxiService taxiService;
 
     /**
-     * Gets taxis.
+     * GET /public/taxis: Gets taxis.
      *
-     * @return taxis
+     * @return OK (status code 200)
      */
+    @GetMapping("/admin/taxis")
     public List<TaxiDto> getTaxis() {
         return taxiService.getTaxis().stream()
             .map(TaxiConverter::convert)

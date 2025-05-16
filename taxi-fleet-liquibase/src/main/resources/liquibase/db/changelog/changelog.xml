@@ -19,7 +19,7 @@
         </rollback>
     </changeSet>
 
-    <changeSet id="initial:data:load_taxis" author="andreykinn20" context="test">
+    <changeSet id="initial:data:load_taxis" author="andreykinn20" context="demo">
         <sqlFile path="data/load_taxis_test.sql" relativeToChangelogFile="true"/>
         <rollback/>
     </changeSet>

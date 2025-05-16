@@ -52,7 +52,7 @@ class PublicApiTest extends BaseFunctionalTest {
         assertThat(availableBookings.getFirst().toLocation().latitude()).isEqualTo(3.0);
         assertThat(availableBookings.getFirst().toLocation().longitude()).isEqualTo(4.0);
         assertThat(availableBookings.getFirst().status()).isEqualTo("AVAILABLE");
-        assertThat(availableBookings.getFirst().createdOn()).isNotNull();
+        assertThat(availableBookings.getFirst().createdOnSeconds()).isNotNull();
     }
 
     @Test

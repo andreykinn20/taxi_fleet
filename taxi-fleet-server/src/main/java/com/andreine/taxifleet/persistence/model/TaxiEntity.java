@@ -46,4 +46,13 @@ public class TaxiEntity {
     @Column(nullable = false)
     private Instant registeredOn;
 
+    /**
+     * Checks if taxi has location.
+     *
+     * @return {@code true} if taxi has location, {@code false} otherwise
+     */
+    public boolean hasLocation() {
+        return latitude != null && longitude != null;
+    }
+
 }

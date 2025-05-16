@@ -3,6 +3,7 @@ package com.andreine.taxifleet.converter;
 import java.util.concurrent.TimeUnit;
 
 import com.andreine.taxifleet.controller.adminapi.model.TaxiDto;
+import com.andreine.taxifleet.controller.common.model.LocationDto;
 import com.andreine.taxifleet.persistence.model.TaxiEntity;
 import com.andreine.taxifleet.service.model.Location;
 import com.andreine.taxifleet.service.model.Taxi;
@@ -22,7 +23,9 @@ public class TaxiConverter {
         return Taxi.builder()
             .id(taxiEntity.getId())
             .name(taxiEntity.getName())
-            .location(Location.of(taxiEntity.getLatitude(), taxiEntity.getLongitude()))
+            .location(taxiEntity.hasLocation()
+                ? new Location(taxiEntity.getLatitude(), taxiEntity.getLongitude())
+                : null)
             .status(Taxi.TaxiStatus.valueOf(taxiEntity.getStatus().name()))
             .registeredOn(taxiEntity.getRegisteredOn().toEpochMilli())
             .build();
@@ -38,7 +41,9 @@ public class TaxiConverter {
         return TaxiDto.builder()
             .id(taxi.id())
             .name(taxi.name())
-            .location(LocationConverter.convert(taxi.location()))
+            .location(taxi.location() != null
+                ? new LocationDto(taxi.location().latitude(), taxi.location().longitude())
+                : null)
             .status(taxi.status().name())
             .registeredOnSeconds(TimeUnit.MILLISECONDS.toSeconds(taxi.registeredOn()))
             .build();

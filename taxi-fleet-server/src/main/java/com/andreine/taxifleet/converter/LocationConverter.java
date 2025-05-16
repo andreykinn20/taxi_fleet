@@ -17,6 +17,7 @@ public class LocationConverter {
      * @return location dto
      */
     public static LocationDto convert(Location location) {
+
         return LocationDto.builder()
             .latitude(location.latitude())
             .longitude(location.longitude())

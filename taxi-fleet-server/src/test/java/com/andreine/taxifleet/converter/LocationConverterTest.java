@@ -9,7 +9,7 @@ class LocationConverterTest {
 
     @Test
     void shouldConvert() {
-        var location = Location.of(1.0, 2.0);
+        var location = new Location(1.0, 2.0);
 
         var locationDto = LocationConverter.convert(location);
 
