@@ -16,7 +16,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
         BingoEventRecompletionApplication.class
     }
 )
-@ActiveProfiles("test")
 @Testcontainers
 public class BaseFunctionalTest {
 
