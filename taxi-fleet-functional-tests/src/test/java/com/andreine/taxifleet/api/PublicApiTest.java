@@ -79,6 +79,10 @@ class PublicApiTest extends BaseFunctionalTest {
                 assertThat(acceptedBooking.getTaxiId()).isEqualTo(savedTaxi.getId());
                 assertThat(acceptedBooking.getStatus()).isEqualTo(BookingStatus.ACCEPTED);
             });
+        assertThat(taxiRepository.findById(savedTaxi.getId()))
+            .hasValueSatisfying(acceptedTaxi -> {
+                assertThat(acceptedTaxi.getStatus()).isEqualTo(TaxiStatus.BOOKED);
+            });
     }
 
     @Test
@@ -159,6 +163,35 @@ class PublicApiTest extends BaseFunctionalTest {
             .hasValueSatisfying(unavailableTaxi -> {
                 assertThat(unavailableTaxi.getId()).isEqualTo(savedTaxi.getId());
                 assertThat(unavailableTaxi.getStatus()).isEqualTo(TaxiStatus.AVAILABLE);
+            });
+    }
+
+    @Test
+    void shouldCompleteBooking() {
+        var booking = booking()
+            .status(BookingStatus.ACCEPTED)
+            .build();
+        var taxi = taxi()
+            .status(TaxiStatus.BOOKED)
+            .build();
+
+        var savedBooking = bookingRepository.save(booking);
+        var savedTaxi = taxiRepository.save(taxi);
+
+        given()
+            .when()
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .post("/public/taxi/{taxiId}/bookings/{bookingId}/complete", savedTaxi.getId(), savedBooking.getId())
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
+
+        assertThat(bookingRepository.findById(savedBooking.getId()))
+            .hasValueSatisfying(acceptedBooking -> {
+                assertThat(acceptedBooking.getStatus()).isEqualTo(BookingStatus.COMPLETED);
+            });
+        assertThat(taxiRepository.findById(savedTaxi.getId()))
+            .hasValueSatisfying(acceptedTaxi -> {
+                assertThat(acceptedTaxi.getStatus()).isEqualTo(TaxiStatus.AVAILABLE);
             });
     }
 
