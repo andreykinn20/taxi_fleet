@@ -46,7 +46,8 @@ public class BookingConverter {
             .fromLocation(LocationConverter.convert(booking.fromLocation()))
             .toLocation(LocationConverter.convert(booking.toLocation()))
             .status(booking.status().name())
-            .createdOn(TimeUnit.MILLISECONDS.toSeconds(booking.createdOnTs()))
+            .taxiId(booking.taxiId())
+            .createdOnSeconds(TimeUnit.MILLISECONDS.toSeconds(booking.createdOnTs()))
             .build();
     }
 

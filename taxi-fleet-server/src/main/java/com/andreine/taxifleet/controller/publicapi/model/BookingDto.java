@@ -1,5 +1,6 @@
 package com.andreine.taxifleet.controller.publicapi.model;
 
+import com.andreine.taxifleet.controller.common.model.LocationDto;
 import lombok.Builder;
 
 /**
@@ -13,7 +14,7 @@ public record BookingDto(
     LocationDto toLocation,
     String status,
     Long taxiId,
-    long createdOn
+    long createdOnSeconds
 ) {
 
 }

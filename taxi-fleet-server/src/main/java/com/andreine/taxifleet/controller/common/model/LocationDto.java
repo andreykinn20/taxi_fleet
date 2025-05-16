@@ -1,4 +1,4 @@
-package com.andreine.taxifleet.controller.publicapi.model;
+package com.andreine.taxifleet.controller.common.model;
 
 import lombok.Builder;
 

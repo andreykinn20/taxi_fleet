@@ -78,13 +78,13 @@ class BookingConverterTest {
 
         assertThat(bookingDto.id()).isEqualTo(1L);
         assertThat(bookingDto.userId()).isEqualTo(2L);
-        assertThat(bookingDto.fromLocation().latitude()).isEqualTo(20.0);
-        assertThat(bookingDto.fromLocation().longitude()).isEqualTo(10.0);
-        assertThat(bookingDto.toLocation().latitude()).isEqualTo(40.0);
-        assertThat(bookingDto.toLocation().longitude()).isEqualTo(30.0);
-        assertThat(bookingDto.status()).isEqualTo(Booking.BookingStatus.AVAILABLE);
+        assertThat(bookingDto.fromLocation().latitude()).isEqualTo(10.0);
+        assertThat(bookingDto.fromLocation().longitude()).isEqualTo(20.0);
+        assertThat(bookingDto.toLocation().latitude()).isEqualTo(30.0);
+        assertThat(bookingDto.toLocation().longitude()).isEqualTo(40.0);
+        assertThat(bookingDto.status()).isEqualTo("AVAILABLE");
         assertThat(bookingDto.taxiId()).isEqualTo(1L);
-        assertThat(bookingDto.createdOn()).isEqualTo(100500L);
+        assertThat(bookingDto.createdOnSeconds()).isEqualTo(100L);
     }
 
 }

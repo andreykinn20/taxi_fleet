@@ -22,7 +22,7 @@ public record Booking(
      */
     public enum BookingStatus {
         AVAILABLE,
-        BOOKED,
+        ACCEPTED,
         FINISHED
     }
 

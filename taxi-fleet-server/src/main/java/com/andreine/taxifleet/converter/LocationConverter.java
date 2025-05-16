@@ -1,6 +1,6 @@
 package com.andreine.taxifleet.converter;
 
-import com.andreine.taxifleet.controller.publicapi.model.LocationDto;
+import com.andreine.taxifleet.controller.common.model.LocationDto;
 import com.andreine.taxifleet.service.model.Location;
 import lombok.experimental.UtilityClass;
 
