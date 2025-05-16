@@ -19,13 +19,24 @@ public class BookingService {
     private final BookingRepository bookingRepository;
 
     /**
+     * Registers the booking.
+     *
+     * @param booking booking
+     */
+    public void registerBooking(Booking booking) {
+        bookingRepository.save(BookingConverter.toEntity(booking));
+
+
+    }
+
+    /**
      * Gets available bookings.
      *
      * @return list of available bookings
      */
     public List<Booking> getAvailableBookings() {
         return bookingRepository.findAvailable().stream()
-            .map(BookingConverter::convert)
+            .map(BookingConverter::fromEntity)
             .toList();
     }
 
@@ -37,7 +48,7 @@ public class BookingService {
      */
     public List<Booking> getTaxiBookings(long taxiId) {
         return bookingRepository.findByTaxi(taxiId).stream()
-            .map(BookingConverter::convert)
+            .map(BookingConverter::fromEntity)
             .toList();
     }
 

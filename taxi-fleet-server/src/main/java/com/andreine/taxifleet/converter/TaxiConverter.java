@@ -19,7 +19,7 @@ public class TaxiConverter {
      * @param taxiEntity taxi entity
      * @return taxi
      */
-    public static Taxi convert(TaxiEntity taxiEntity) {
+    public static Taxi fromEntity(TaxiEntity taxiEntity) {
         return Taxi.builder()
             .id(taxiEntity.getId())
             .name(taxiEntity.getName())
@@ -37,7 +37,7 @@ public class TaxiConverter {
      * @param taxi taxi
      * @return taxi dto
      */
-    public static TaxiDto convert(Taxi taxi) {
+    public static TaxiDto toDto(Taxi taxi) {
         return TaxiDto.builder()
             .id(taxi.id())
             .name(taxi.name())

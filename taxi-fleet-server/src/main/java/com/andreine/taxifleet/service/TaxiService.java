@@ -27,7 +27,7 @@ public class TaxiService {
      */
     public List<Taxi> getTaxis() {
         return taxiRepository.findAll().stream()
-            .map(TaxiConverter::convert)
+            .map(TaxiConverter::fromEntity)
             .toList();
     }
 

@@ -51,7 +51,7 @@ public class PublicApiController {
     @GetMapping("/public/taxi/{taxiId}/bookings")
     public ResponseEntity<List<BookingDto>> getBookings(@PathVariable Long taxiId) {
         var taxiBookings = bookingService.getTaxiBookings(taxiId).stream()
-            .map(BookingConverter::convert)
+            .map(BookingConverter::toDto)
             .toList();
 
         return ResponseEntity.ok(taxiBookings);
@@ -65,7 +65,7 @@ public class PublicApiController {
     @GetMapping("/public/bookings/available")
     public ResponseEntity<List<BookingDto>> getAvailableBookings() {
         var availableBookings = bookingService.getAvailableBookings().stream()
-            .map(BookingConverter::convert)
+            .map(BookingConverter::toDto)
             .toList();
 
         return ResponseEntity.ok(availableBookings);

@@ -5,11 +5,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.retry.annotation.EnableRetry;
 
 /**
- * Taxi fleet auto configuration.
+ * Taxi fleet server auto configuration.
  */
 @AutoConfiguration
 @EnableRetry
 @EnableJpaRepositories(basePackages = "com.andreine.taxifleet.persistence.repository")
-public class TaxiFleetAutoConfiguration {
+public class TaxiFleetServerAutoConfiguration {
 
 }

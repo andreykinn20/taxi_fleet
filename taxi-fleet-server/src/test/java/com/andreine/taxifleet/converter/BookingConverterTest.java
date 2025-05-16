@@ -27,7 +27,7 @@ class BookingConverterTest {
             .updatedOn(Instant.ofEpochMilli(2000L))
             .build();
 
-        var booking = BookingConverter.convert(bookingEntity);
+        var booking = BookingConverter.fromEntity(bookingEntity);
 
         assertThat(booking.id()).isEqualTo(1L);
         assertThat(booking.userId()).isEqualTo(2L);
@@ -56,7 +56,7 @@ class BookingConverterTest {
             .createdOn(Instant.ofEpochMilli(1000L))
             .build();
 
-        var booking = BookingConverter.convert(bookingEntity);
+        var booking = BookingConverter.fromEntity(bookingEntity);
 
         assertThat(booking.updatedOnTs()).isNull();
     }
@@ -74,7 +74,7 @@ class BookingConverterTest {
             .updatedOnTs(100500L)
             .build();
 
-        var bookingDto = BookingConverter.convert(booking);
+        var bookingDto = BookingConverter.toDto(booking);
 
         assertThat(bookingDto.id()).isEqualTo(1L);
         assertThat(bookingDto.userId()).isEqualTo(2L);
@@ -85,6 +85,31 @@ class BookingConverterTest {
         assertThat(bookingDto.status()).isEqualTo("AVAILABLE");
         assertThat(bookingDto.taxiId()).isEqualTo(1L);
         assertThat(bookingDto.createdOnSeconds()).isEqualTo(100L);
+    }
+
+    @Test
+    void convertConvertDomainToEntity() {
+        var booking = Booking.builder()
+            .id(1L)
+            .userId(2L)
+            .fromLocation(new Location(10.0, 20.0))
+            .toLocation(new Location(30.0, 40.0))
+            .status(Booking.BookingStatus.AVAILABLE)
+            .taxiId(1L)
+            .createdOnTs(100500L)
+            .updatedOnTs(100500L)
+            .build();
+
+        var bookingEntity = BookingConverter.toEntity(booking);
+
+        assertThat(bookingEntity.getId()).isEqualTo(1L);
+        assertThat(bookingEntity.getUserId()).isEqualTo(2L);
+        assertThat(bookingEntity.getOriginLatitude()).isEqualTo(10.0);
+        assertThat(bookingEntity.getOriginLongitude()).isEqualTo(20.0);
+        assertThat(bookingEntity.getDestinationLatitude()).isEqualTo(30.0);
+        assertThat(bookingEntity.getDestinationLongitude()).isEqualTo(40.0);
+        assertThat(bookingEntity.getStatus()).isEqualTo(BookingStatus.AVAILABLE);
+        assertThat(bookingEntity.getTaxiId()).isEqualTo(1L);
     }
 
 }

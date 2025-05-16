@@ -11,7 +11,7 @@ class LocationConverterTest {
     void shouldConvert() {
         var location = new Location(1.0, 2.0);
 
-        var locationDto = LocationConverter.convert(location);
+        var locationDto = LocationConverter.toDto(location);
 
         assertThat(locationDto.latitude()).isEqualTo(1.0);
         assertThat(locationDto.longitude()).isEqualTo(2.0);

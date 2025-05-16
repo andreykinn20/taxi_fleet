@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.andreine.taxifleet.controller.publicapi.model.BookingDto;
 import com.andreine.taxifleet.persistence.model.BookingEntity;
+import com.andreine.taxifleet.persistence.model.BookingStatus;
 import com.andreine.taxifleet.service.model.Booking;
 import com.andreine.taxifleet.service.model.Location;
 import lombok.experimental.UtilityClass;
@@ -20,7 +21,7 @@ public class BookingConverter {
      * @param bookingEntity booking entity
      * @return booking
      */
-    public static Booking convert(BookingEntity bookingEntity) {
+    public static Booking fromEntity(BookingEntity bookingEntity) {
         return Booking.builder()
             .id(bookingEntity.getId())
             .userId(bookingEntity.getUserId())
@@ -39,15 +40,34 @@ public class BookingConverter {
      * @param booking booking
      * @return booking dto
      */
-    public static BookingDto convert(Booking booking) {
+    public static BookingDto toDto(Booking booking) {
         return BookingDto.builder()
             .id(booking.id())
             .userId(booking.userId())
-            .fromLocation(LocationConverter.convert(booking.fromLocation()))
-            .toLocation(LocationConverter.convert(booking.toLocation()))
+            .fromLocation(LocationConverter.toDto(booking.fromLocation()))
+            .toLocation(LocationConverter.toDto(booking.toLocation()))
             .status(booking.status().name())
             .taxiId(booking.taxiId())
             .createdOnSeconds(TimeUnit.MILLISECONDS.toSeconds(booking.createdOnTs()))
+            .build();
+    }
+
+    /**
+     * Converts booking to booking entity.
+     *
+     * @param booking booking
+     * @return booking
+     */
+    public static BookingEntity toEntity(Booking booking) {
+        return BookingEntity.builder()
+            .id(booking.id())
+            .userId(booking.userId())
+            .originLatitude(booking.fromLocation().latitude())
+            .originLongitude(booking.fromLocation().longitude())
+            .destinationLatitude(booking.toLocation().latitude())
+            .destinationLongitude(booking.toLocation().longitude())
+            .status(BookingStatus.valueOf(booking.status().name()))
+            .taxiId(booking.taxiId())
             .build();
     }
 

@@ -33,7 +33,7 @@ public class AdminApiController {
     @GetMapping("/admin/taxis")
     public ResponseEntity<List<TaxiDto>> getTaxis() {
         var taxis = taxiService.getTaxis().stream()
-            .map(TaxiConverter::convert)
+            .map(TaxiConverter::toDto)
             .toList();
 
         return ResponseEntity.ok(taxis);

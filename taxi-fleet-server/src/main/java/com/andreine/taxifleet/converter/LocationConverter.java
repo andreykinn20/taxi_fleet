@@ -16,7 +16,7 @@ public class LocationConverter {
      * @param location location
      * @return location dto
      */
-    public static LocationDto convert(Location location) {
+    public static LocationDto toDto(Location location) {
 
         return LocationDto.builder()
             .latitude(location.latitude())

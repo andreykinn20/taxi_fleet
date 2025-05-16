@@ -2,8 +2,8 @@ package com.andreine.taxifleet.persistence.repository;
 
 import java.util.List;
 
-import com.andreine.taxifleet.persistence.model.BookingEntity;
 import com.andreine.taxifleet.model.MonthlyBookingStats;
+import com.andreine.taxifleet.persistence.model.BookingEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -29,6 +29,11 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
     @Query(value = "SELECT o FROM BookingEntity o WHERE o.taxiId = :taxiId")
     List<BookingEntity> findByTaxi(long taxiId);
 
+    /**
+     * Gets monthly booking statistics.
+     *
+     * @return monthly booking statistics
+     */
     @Query("""
             SELECT NEW com.andreine.taxifleet.model.MonthlyBookingStats(
                 EXTRACT(YEAR FROM b.createdOn),
