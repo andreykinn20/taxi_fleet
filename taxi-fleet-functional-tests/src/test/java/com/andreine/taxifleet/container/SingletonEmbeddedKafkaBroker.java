@@ -12,7 +12,8 @@ public class SingletonEmbeddedKafkaBroker {
 
     public static EmbeddedKafkaBroker getInstance() {
         if (instance == null) {
-            instance = null;
+            instance = new EmbeddedKafkaKraftBroker(1, 1);
+            instance.afterPropertiesSet();
         }
         return instance;
     }

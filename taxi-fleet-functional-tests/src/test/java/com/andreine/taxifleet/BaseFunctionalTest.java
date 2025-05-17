@@ -9,7 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
-import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -21,8 +21,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
         KafkaConsumerConfig.class
     }
 )
+@ActiveProfiles("test")
 @Testcontainers
-@EmbeddedKafka(partitions = 1, topics = {"taxi_fleet_booking_created"})
 public class BaseFunctionalTest {
 
     private static final EmbeddedKafkaBroker embeddedKafka = SingletonEmbeddedKafkaBroker.getInstance();
@@ -34,8 +34,11 @@ public class BaseFunctionalTest {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
+        registry.add("spring.kafka.bootstrap-servers", embeddedKafka::getBrokersAsString);
+    }
 
-        //registry.add("spring.kafka.bootstrap-servers", embeddedKafka::getBrokersAsString);
+    static {
+        SingletonEmbeddedKafkaBroker.getInstance().addTopics("taxi_fleet_booking_created");
     }
 
     @Autowired
