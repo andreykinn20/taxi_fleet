@@ -3,14 +3,21 @@ package com.andreine.taxifleet.service;
 import java.util.List;
 
 import com.andreine.taxifleet.converter.BookingConverter;
+import com.andreine.taxifleet.exception.BookingNotFoundException;
+import com.andreine.taxifleet.exception.IllegalBookingStatusException;
 import com.andreine.taxifleet.integration.kafka.producer.BookingMessageProducer;
 import com.andreine.taxifleet.model.MonthlyBookingStats;
 import com.andreine.taxifleet.persistence.model.BookingEntity;
+import com.andreine.taxifleet.persistence.model.BookingStatus;
 import com.andreine.taxifleet.persistence.model.TaxiEntity;
+import com.andreine.taxifleet.persistence.model.TaxiStatus;
 import com.andreine.taxifleet.persistence.repository.BookingRepository;
 import com.andreine.taxifleet.persistence.repository.TaxiRepository;
 import com.andreine.taxifleet.service.model.Booking;
+import jakarta.persistence.OptimisticLockException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -38,6 +45,34 @@ public class BookingService {
         taxiRepository.findAvailable().stream()
             .map(TaxiEntity::getId)
             .forEach(taxiId -> bookingMessageProducer.publishBookingMessage(convertedBooking, taxiId));
+    }
+
+    /**
+     * Cancels the booking.
+     *
+     * @param bookingId booking id
+     */
+    @Transactional
+    @Retryable(retryFor = OptimisticLockException.class)
+    public void cancelBooking(long bookingId) {
+        BookingEntity booking = bookingRepository.findById(bookingId)
+            .orElseThrow(() -> new BookingNotFoundException(bookingId));
+
+        if (BookingStatus.AVAILABLE != booking.getStatus() && BookingStatus.ACCEPTED != booking.getStatus()) {
+            throw new IllegalBookingStatusException("Booking %s is not allowed to be cancelled".formatted(bookingId));
+        }
+
+        bookingRepository.save(booking.toBuilder()
+            .status(BookingStatus.CANCELLED)
+            .taxiId(null)
+            .build());
+
+        if (BookingStatus.ACCEPTED == booking.getStatus()) {
+            var taxi = taxiRepository.findById(booking.getTaxiId());
+            taxi.ifPresent(taxiEntity -> taxiRepository.save(taxiEntity.toBuilder()
+                .status(TaxiStatus.AVAILABLE)
+                .build()));
+        }
     }
 
     /**

@@ -35,7 +35,7 @@ public class TaxiBookingManagementService {
      */
     @Transactional
     @Retryable(retryFor = OptimisticLockException.class)
-    public void acceptBooking(Long taxiId, Long bookingId) {
+    public void acceptBooking(long taxiId, long bookingId) {
         BookingEntity booking = bookingRepository.findById(bookingId)
             .orElseThrow(() -> new BookingNotFoundException(bookingId));
 
@@ -67,6 +67,7 @@ public class TaxiBookingManagementService {
      * @param bookingId booking id
      */
     @Transactional
+    @Retryable(retryFor = OptimisticLockException.class)
     public void completeBooking(Long taxiId, Long bookingId) {
         BookingEntity booking = bookingRepository.findById(bookingId)
             .orElseThrow(() -> new BookingNotFoundException(bookingId));

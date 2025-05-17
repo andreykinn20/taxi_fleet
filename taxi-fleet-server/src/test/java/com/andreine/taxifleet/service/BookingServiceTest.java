@@ -3,12 +3,15 @@ package com.andreine.taxifleet.service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
+import com.andreine.taxifleet.exception.IllegalBookingStatusException;
 import com.andreine.taxifleet.integration.kafka.producer.BookingMessageProducer;
 import com.andreine.taxifleet.model.MonthlyBookingStats;
 import com.andreine.taxifleet.persistence.model.BookingEntity;
 import com.andreine.taxifleet.persistence.model.BookingStatus;
 import com.andreine.taxifleet.persistence.model.TaxiEntity;
+import com.andreine.taxifleet.persistence.model.TaxiStatus;
 import com.andreine.taxifleet.persistence.repository.BookingRepository;
 import com.andreine.taxifleet.persistence.repository.TaxiRepository;
 import com.andreine.taxifleet.service.model.Booking;
@@ -20,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -122,6 +126,62 @@ class BookingServiceTest {
         verify(bookingRepository).save(bookingEntity);
         verify(bookingMessageProducer).publishBookingMessage(savedBooking, 1L);
         verify(bookingMessageProducer).publishBookingMessage(savedBooking, 2L);
+    }
+
+    @Test
+    void shouldCancelAvailableBooking() {
+        var booking = bookingEntity()
+            .status(BookingStatus.AVAILABLE)
+            .build();
+        var savedBooking = bookingEntity()
+            .status(BookingStatus.CANCELLED)
+            .build();
+
+        when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
+
+        bookingService.cancelBooking(1L);
+
+        verify(bookingRepository).save(savedBooking);
+    }
+
+    @Test
+    void shouldCancelAcceptedBooking() {
+        var booking = bookingEntity()
+            .taxiId(1L)
+            .status(BookingStatus.ACCEPTED)
+            .build();
+        var savedBooking = bookingEntity()
+            .taxiId(1L)
+            .status(BookingStatus.CANCELLED)
+            .build();
+        var taxi = TaxiEntity.builder()
+            .status(TaxiStatus.BOOKED)
+            .build();
+        var savedTaxi = TaxiEntity.builder()
+            .status(TaxiStatus.AVAILABLE)
+            .build();
+
+        when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
+        when(taxiRepository.findById(1L)).thenReturn(Optional.of(taxi));
+
+        bookingService.cancelBooking(1L);
+
+        verify(bookingRepository).save(savedBooking);
+        verify(taxiRepository).save(savedTaxi);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCancelAcceptedBookingIfBookingIsCompleted() {
+        var booking = bookingEntity()
+            .taxiId(1L)
+            .status(BookingStatus.COMPLETED)
+            .build();
+
+        when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
+
+        assertThatExceptionOfType(IllegalBookingStatusException.class)
+            .isThrownBy(() -> bookingService.cancelBooking(1L))
+            .withMessage("Booking 1 is not allowed to be cancelled");
     }
 
     private BookingEntity.BookingEntityBuilder bookingEntity() {
