@@ -235,7 +235,7 @@ class PublicApiTest extends BaseFunctionalTest {
     }
 
     @Test
-    void shouldCancelBooking() {
+    void shouldCancelBooking() throws InterruptedException {
         var taxi = taxi()
             .status(TaxiStatus.BOOKED)
             .build();
@@ -249,7 +249,6 @@ class PublicApiTest extends BaseFunctionalTest {
         given()
             .when()
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .log().ifValidationFails()
             .post("/public/bookings/{bookingId}/cancel", savedBooking.getId())
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());

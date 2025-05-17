@@ -25,6 +25,11 @@
             <groupId>com.andreine</groupId>
             <artifactId>taxi-fleet-server</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
