@@ -58,17 +58,19 @@ public class BookingService {
         BookingEntity booking = bookingRepository.findById(bookingId)
             .orElseThrow(() -> new BookingNotFoundException(bookingId));
 
-        if (BookingStatus.AVAILABLE != booking.getStatus() && BookingStatus.ACCEPTED != booking.getStatus()) {
+        BookingStatus bookingStatus = booking.getStatus();
+        if (BookingStatus.AVAILABLE != bookingStatus && BookingStatus.ACCEPTED != bookingStatus) {
             throw new IllegalBookingStatusException("Booking %s is not allowed to be cancelled".formatted(bookingId));
         }
 
+        Long taxiId = booking.getTaxiId();
         bookingRepository.save(booking.toBuilder()
             .status(BookingStatus.CANCELLED)
             .taxiId(null)
             .build());
 
-        if (BookingStatus.ACCEPTED == booking.getStatus()) {
-            var taxi = taxiRepository.findById(booking.getTaxiId());
+        if (BookingStatus.ACCEPTED == bookingStatus) {
+            var taxi = taxiRepository.findById(taxiId);
             taxi.ifPresent(taxiEntity -> taxiRepository.save(taxiEntity.toBuilder()
                 .status(TaxiStatus.AVAILABLE)
                 .build()));
