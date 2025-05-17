@@ -1,10 +1,10 @@
-package com.andreine.taxifleet.config;
+package com.andreine.taxifleet.container;
 
 import org.testcontainers.containers.PostgreSQLContainer;
 
 public class SingletonPostgresContainer extends PostgreSQLContainer<SingletonPostgresContainer> {
 
-    private static final SingletonPostgresContainer INSTANCE = new SingletonPostgresContainer();
+    private static SingletonPostgresContainer instance;
 
     private SingletonPostgresContainer() {
         super("postgres:15");
@@ -13,8 +13,12 @@ public class SingletonPostgresContainer extends PostgreSQLContainer<SingletonPos
         withPassword("test");
     }
 
-    public static SingletonPostgresContainer getInstance() {
-        return INSTANCE;
+    public static  SingletonPostgresContainer getInstance() {
+        if (instance == null) {
+            instance = new SingletonPostgresContainer();
+            instance.start();
+        }
+        return instance;
     }
 
 }

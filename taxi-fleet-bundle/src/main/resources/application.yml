@@ -6,3 +6,8 @@ spring:
     url: jdbc:postgresql://localhost:15432/taxi_fleet_db
     username: taxi_fleet
     password: taxi_fleet
+
+kafka:
+  publisher:
+    booking-created:
+      topic-name: taxi_fleet_booking_created

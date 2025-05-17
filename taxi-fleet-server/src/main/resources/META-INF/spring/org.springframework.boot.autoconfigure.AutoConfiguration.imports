@@ -1,2 +1,2 @@
-com.andreine.taxifleet.config.TaxiFleetAutoConfiguration
+com.andreine.taxifleet.config.TaxiFleetServerAutoConfiguration
 com.andreine.taxifleet.config.TaxiFleetKafkaAutoConfiguration
