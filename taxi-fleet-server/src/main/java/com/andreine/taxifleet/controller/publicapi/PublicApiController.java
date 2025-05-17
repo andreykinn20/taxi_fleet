@@ -3,6 +3,7 @@ package com.andreine.taxifleet.controller.publicapi;
 import java.util.List;
 
 import com.andreine.taxifleet.controller.publicapi.model.BookingDto;
+import com.andreine.taxifleet.controller.publicapi.model.BookingRequest;
 import com.andreine.taxifleet.converter.BookingConverter;
 import com.andreine.taxifleet.service.BookingService;
 import com.andreine.taxifleet.service.TaxiBookingManagementService;
@@ -34,7 +35,7 @@ public class PublicApiController {
      *
      * @param taxiId    (required)
      * @param bookingId (required)
-     * @return OK (status code 200)
+     * @return NO CONTENT (status code 204)
      */
     @PostMapping("/public/taxi/{taxiId}/bookings/{bookingId}/accept")
     public ResponseEntity<Void> acceptBooking(@PathVariable Long taxiId, @PathVariable Long bookingId) {
@@ -75,7 +76,7 @@ public class PublicApiController {
      * POST /taxi/{taxiId}/status/available: sets taxi status to available.
      *
      * @param taxiId taxi id (required)
-     * @return OK (status code 200)
+     * @return NO CONTENT (status code 204)
      */
     @PostMapping("/public/taxi/{taxiId}/status/unavailable")
     public ResponseEntity<Void> setTaxiUnavailable(@PathVariable Long taxiId) {
@@ -88,7 +89,7 @@ public class PublicApiController {
      * POST /taxi/{taxiId}/status/available: sets taxi status to available.
      *
      * @param taxiId taxi id (required)
-     * @return OK (status code 200)
+     * @return NO CONTENT (status code 204)
      */
     @PostMapping("/public/taxi/{taxiId}/status/available")
     public ResponseEntity<Void> setTaxiAvailable(@PathVariable Long taxiId) {
@@ -102,11 +103,24 @@ public class PublicApiController {
      *
      * @param taxiId    taxi id (required)
      * @param bookingId booking id (required)
-     * @return OK (status code 200)
+     * @return NO CONTENT (status code 204)
      */
     @PostMapping("/public/taxi/{taxiId}/bookings/{bookingId}/complete")
     public ResponseEntity<Void> completeBooking(@PathVariable Long taxiId, @PathVariable Long bookingId) {
         taxiBookingManagementService.completeBooking(taxiId, bookingId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * POST /public/bookings: registers booking.
+     *
+     * @param bookingRequest booking request (required)
+     * @return NO CONTENT (status code 204)
+     */
+    @PostMapping("/public/bookings")
+    public ResponseEntity<Void> completeBooking(BookingRequest bookingRequest) {
+        bookingService.registerBooking(BookingConverter.fromRequest(bookingRequest));
 
         return ResponseEntity.noContent().build();
     }

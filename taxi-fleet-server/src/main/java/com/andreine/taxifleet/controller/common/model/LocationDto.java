@@ -1,14 +1,17 @@
 package com.andreine.taxifleet.controller.common.model;
 
 import lombok.Builder;
+import lombok.NonNull;
 
 /**
  * Location DTO.
  */
 @Builder
 public record LocationDto(
-    double latitude,
-    double longitude
+    @NonNull
+    Double latitude,
+    @NonNull
+    Double longitude
 ) {
 
 }

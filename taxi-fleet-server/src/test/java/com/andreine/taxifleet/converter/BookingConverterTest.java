@@ -2,6 +2,8 @@ package com.andreine.taxifleet.converter;
 
 import java.time.Instant;
 
+import com.andreine.taxifleet.controller.common.model.LocationDto;
+import com.andreine.taxifleet.controller.publicapi.model.BookingRequest;
 import com.andreine.taxifleet.persistence.model.BookingEntity;
 import com.andreine.taxifleet.persistence.model.BookingStatus;
 import com.andreine.taxifleet.service.model.Booking;
@@ -110,6 +112,30 @@ class BookingConverterTest {
         assertThat(bookingEntity.getDestinationLongitude()).isEqualTo(40.0);
         assertThat(bookingEntity.getStatus()).isEqualTo(BookingStatus.AVAILABLE);
         assertThat(bookingEntity.getTaxiId()).isEqualTo(1L);
+    }
+
+    @Test
+    void convertConvertApiRequestToDomain() {
+        var bookingRequest = BookingRequest.builder()
+            .userId(2L)
+            .fromLocation(LocationDto.builder()
+                .latitude(10.0)
+                .longitude(20.0)
+                .build())
+            .toLocation(LocationDto.builder()
+                .latitude(30.0)
+                .longitude(40.0)
+                .build())
+            .build();
+
+        var booking = BookingConverter.fromRequest(bookingRequest);
+
+        assertThat(booking.userId()).isEqualTo(2L);
+        assertThat(booking.fromLocation().latitude()).isEqualTo(10.0);
+        assertThat(booking.fromLocation().longitude()).isEqualTo(20.0);
+        assertThat(booking.toLocation().latitude()).isEqualTo(30.0);
+        assertThat(booking.toLocation().longitude()).isEqualTo(40.0);
+        assertThat(booking.status()).isEqualTo(Booking.BookingStatus.AVAILABLE);
     }
 
 }

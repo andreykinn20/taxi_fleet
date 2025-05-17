@@ -3,6 +3,7 @@ package com.andreine.taxifleet.converter;
 import java.util.concurrent.TimeUnit;
 
 import com.andreine.taxifleet.controller.publicapi.model.BookingDto;
+import com.andreine.taxifleet.controller.publicapi.model.BookingRequest;
 import com.andreine.taxifleet.persistence.model.BookingEntity;
 import com.andreine.taxifleet.persistence.model.BookingStatus;
 import com.andreine.taxifleet.service.model.Booking;
@@ -68,6 +69,21 @@ public class BookingConverter {
             .destinationLongitude(booking.toLocation().longitude())
             .status(BookingStatus.valueOf(booking.status().name()))
             .taxiId(booking.taxiId())
+            .build();
+    }
+
+    /**
+     * Converts booking request to booking.
+     *
+     * @param bookingRequest booking request
+     * @return booking
+     */
+    public static Booking fromRequest(BookingRequest bookingRequest) {
+        return Booking.builder()
+            .userId(bookingRequest.userId())
+            .fromLocation(new Location(bookingRequest.fromLocation().latitude(), bookingRequest.fromLocation().longitude()))
+            .toLocation(new Location(bookingRequest.toLocation().latitude(), bookingRequest.toLocation().longitude()))
+            .status(Booking.BookingStatus.AVAILABLE)
             .build();
     }
 
