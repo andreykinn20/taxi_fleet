@@ -4,10 +4,15 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import com.andreine.taxifleet.integration.kafka.producer.BookingMessageProducer;
 import com.andreine.taxifleet.model.MonthlyBookingStats;
 import com.andreine.taxifleet.persistence.model.BookingEntity;
 import com.andreine.taxifleet.persistence.model.BookingStatus;
+import com.andreine.taxifleet.persistence.model.TaxiEntity;
 import com.andreine.taxifleet.persistence.repository.BookingRepository;
+import com.andreine.taxifleet.persistence.repository.TaxiRepository;
+import com.andreine.taxifleet.service.model.Booking;
+import com.andreine.taxifleet.service.model.Location;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -22,6 +28,12 @@ class BookingServiceTest {
 
     @Mock
     private BookingRepository bookingRepository;
+
+    @Mock
+    private TaxiRepository taxiRepository;
+
+    @Mock
+    private BookingMessageProducer bookingMessageProducer;
 
     @InjectMocks
     private BookingService bookingService;
@@ -81,6 +93,30 @@ class BookingServiceTest {
             .isEqualTo(monthlyBookingStats);
     }
 
+    @Test
+    void shouldRegisterBooking() {
+        var booking = booking()
+            .id(1L)
+            .build();
+        var bookingEntity = bookingEntity()
+            .id(1L)
+            .build();
+        var taxi1 = TaxiEntity.builder()
+            .id(1L)
+            .build();
+        var taxi2 = TaxiEntity.builder()
+            .id(2L)
+            .build();
+
+        when(taxiRepository.findAvailable()).thenReturn(List.of(taxi1, taxi2));
+
+        bookingService.registerBooking(booking);
+
+        verify(bookingRepository).save(bookingEntity);
+        verify(bookingMessageProducer).publishBookingMessage(booking, 1L);
+        verify(bookingMessageProducer).publishBookingMessage(booking, 2L);
+    }
+
     private BookingEntity.BookingEntityBuilder bookingEntity() {
         return BookingEntity.builder()
             .userId(1L)
@@ -90,6 +126,15 @@ class BookingServiceTest {
             .destinationLatitude(1.0)
             .destinationLongitude(1.0)
             .createdOn(Instant.now().minus(10L, ChronoUnit.MINUTES));
+    }
+
+    private Booking.BookingBuilder booking() {
+        return Booking.builder()
+            .userId(1L)
+            .status(Booking.BookingStatus.AVAILABLE)
+            .fromLocation(new Location(2.0, 2.0))
+            .toLocation(new Location(1.0, 1.0))
+            .createdOnTs(100500L);
     }
 
 }
