@@ -12,8 +12,7 @@ public class SingletonEmbeddedKafkaBroker {
 
     public static EmbeddedKafkaBroker getInstance() {
         if (instance == null) {
-            instance = new EmbeddedKafkaKraftBroker(1, 1, "taxi_fleet_booking_created");
-            instance.afterPropertiesSet();
+            instance = null;
         }
         return instance;
     }

@@ -1,5 +1,6 @@
 package com.andreine.taxifleet;
 
+import com.andreine.taxifleet.config.KafkaConsumerConfig;
 import com.andreine.taxifleet.container.SingletonEmbeddedKafkaBroker;
 import com.andreine.taxifleet.container.SingletonPostgresContainer;
 import com.andreine.taxifleet.persistence.repository.BookingRepository;
@@ -16,7 +17,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
     classes = {
-        BingoEventRecompletionApplication.class
+        BingoEventRecompletionApplication.class,
+        KafkaConsumerConfig.class
     }
 )
 @Testcontainers
@@ -33,7 +35,7 @@ public class BaseFunctionalTest {
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
 
-        registry.add("spring.kafka.bootstrap-servers", embeddedKafka::getBrokersAsString);
+        //registry.add("spring.kafka.bootstrap-servers", embeddedKafka::getBrokersAsString);
     }
 
     @Autowired
