@@ -1,0 +1,1 @@
+create database taxi_fleet_db;
