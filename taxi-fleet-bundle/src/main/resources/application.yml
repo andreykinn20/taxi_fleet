@@ -6,6 +6,10 @@ spring:
     url: jdbc:postgresql://localhost:15432/taxi_fleet_db
     username: taxi_fleet
     password: taxi_fleet
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 kafka:
   publisher:

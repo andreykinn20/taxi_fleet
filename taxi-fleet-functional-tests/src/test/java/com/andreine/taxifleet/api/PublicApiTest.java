@@ -214,7 +214,7 @@ class PublicApiTest extends BaseFunctionalTest {
                 .build())
             .build();
 
-        var savedTaxi = taxiRepository.save(taxi);
+        taxiRepository.save(taxi);
 
         given()
             .when()
@@ -224,6 +224,16 @@ class PublicApiTest extends BaseFunctionalTest {
             .post("/public/bookings")
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
+
+        var bookingMessage = consumerTopicSteps.getSingleBookingMessage();
+
+        assertThat(bookingMessage.bookingId()).isPositive();
+        assertThat(bookingMessage.userId()).isEqualTo(1L);
+        assertThat(bookingMessage.fromLocation().latitude()).isEqualTo(30.0);
+        assertThat(bookingMessage.fromLocation().longitude()).isEqualTo(40.0);
+        assertThat(bookingMessage.toLocation().latitude()).isEqualTo(10.0);
+        assertThat(bookingMessage.toLocation().longitude()).isEqualTo(20.0);
+        assertThat(bookingMessage.createdOnTs()).isPositive();
     }
 
     private BookingEntity.BookingEntityBuilder booking() {

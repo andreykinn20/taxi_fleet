@@ -5,6 +5,7 @@ import com.andreine.taxifleet.container.SingletonEmbeddedKafkaBroker;
 import com.andreine.taxifleet.container.SingletonPostgresContainer;
 import com.andreine.taxifleet.persistence.repository.BookingRepository;
 import com.andreine.taxifleet.persistence.repository.TaxiRepository;
+import com.andreine.taxifleet.steps.ConsumerTopicSteps;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,6 +47,9 @@ public class BaseFunctionalTest {
 
     @Autowired
     protected TaxiRepository taxiRepository;
+
+    @Autowired
+    protected ConsumerTopicSteps consumerTopicSteps;
 
     @AfterEach
     void tearDown() {

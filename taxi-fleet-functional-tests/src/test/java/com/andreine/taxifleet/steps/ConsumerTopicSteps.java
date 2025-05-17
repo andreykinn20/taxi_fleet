@@ -38,16 +38,16 @@ public class ConsumerTopicSteps {
 
     private final ObjectMapper objectMapper;
 
-    public List<BookingMessageDto> getBookingMessages(int size) {
-        List<BookingMessageDto> bookingMessages = poll(bookingCreatedTopic, 10, ChronoUnit.SECONDS, size)
+    public BookingMessageDto getSingleBookingMessage() {
+        List<BookingMessageDto> bookingMessages = poll(bookingCreatedTopic, 10, ChronoUnit.SECONDS, 1)
             .stream()
             .map(ConsumerRecord::value)
             .map(event -> deserializeValue(event, BookingMessageDto.class))
             .toList();
 
-        assertThat(bookingMessages).hasSize(size);
+        assertThat(bookingMessages).hasSize(1);
 
-        return bookingMessages;
+        return bookingMessages.getFirst();
     }
 
     private List<ConsumerRecord<String, String>> poll(String topic, long timeout, TemporalUnit timeUnit, int expectedMessages) {

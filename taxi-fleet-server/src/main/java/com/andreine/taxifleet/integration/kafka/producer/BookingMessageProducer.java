@@ -25,7 +25,6 @@ public class BookingMessageProducer {
         BookingMessageDto message = BookingMessageDto.builder()
             .bookingId(booking.id())
             .userId(booking.userId())
-            .taxiId(taxiId)
             .createdOnTs(booking.createdOnTs())
             .fromLocation(booking.fromLocation())
             .toLocation(booking.toLocation())
