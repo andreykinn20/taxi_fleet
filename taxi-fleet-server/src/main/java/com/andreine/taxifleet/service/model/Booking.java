@@ -7,7 +7,7 @@ import lombok.Builder;
  */
 @Builder
 public record Booking(
-    long id,
+    Long id,
     long userId,
     Location fromLocation,
     Location toLocation,

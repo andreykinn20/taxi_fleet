@@ -4,7 +4,9 @@ import java.time.Instant;
 import java.util.List;
 
 import com.andreine.taxifleet.BaseFunctionalTest;
+import com.andreine.taxifleet.controller.common.model.LocationDto;
 import com.andreine.taxifleet.controller.publicapi.model.BookingDto;
+import com.andreine.taxifleet.controller.publicapi.model.BookingRequest;
 import com.andreine.taxifleet.persistence.model.BookingEntity;
 import com.andreine.taxifleet.persistence.model.BookingStatus;
 import com.andreine.taxifleet.persistence.model.TaxiEntity;
@@ -47,10 +49,10 @@ class PublicApiTest extends BaseFunctionalTest {
         assertThat(availableBookings).hasSize(1);
         assertThat(availableBookings.getFirst().id()).isEqualTo(savedBooking.getId());
         assertThat(availableBookings.getFirst().userId()).isEqualTo(1L);
-        assertThat(availableBookings.getFirst().fromLocation().latitude()).isEqualTo(1.0);
-        assertThat(availableBookings.getFirst().fromLocation().longitude()).isEqualTo(2.0);
-        assertThat(availableBookings.getFirst().toLocation().latitude()).isEqualTo(3.0);
-        assertThat(availableBookings.getFirst().toLocation().longitude()).isEqualTo(4.0);
+        assertThat(availableBookings.getFirst().fromLocation().getLatitude()).isEqualTo(1.0);
+        assertThat(availableBookings.getFirst().fromLocation().getLongitude()).isEqualTo(2.0);
+        assertThat(availableBookings.getFirst().toLocation().getLatitude()).isEqualTo(3.0);
+        assertThat(availableBookings.getFirst().toLocation().getLongitude()).isEqualTo(4.0);
         assertThat(availableBookings.getFirst().status()).isEqualTo("AVAILABLE");
         assertThat(availableBookings.getFirst().createdOnSeconds()).isNotNull();
     }
@@ -193,6 +195,35 @@ class PublicApiTest extends BaseFunctionalTest {
             .hasValueSatisfying(acceptedTaxi -> {
                 assertThat(acceptedTaxi.getStatus()).isEqualTo(TaxiStatus.AVAILABLE);
             });
+    }
+
+    @Test
+    void shouldRegisterBooking() {
+        var taxi = taxi()
+            .status(TaxiStatus.AVAILABLE)
+            .build();
+        var bookingRequest = BookingRequest.builder()
+            .userId(1L)
+            .toLocation(LocationDto.builder()
+                .latitude(10.0)
+                .longitude(20.0)
+                .build())
+            .fromLocation(LocationDto.builder()
+                .latitude(30.0)
+                .longitude(40.0)
+                .build())
+            .build();
+
+        var savedTaxi = taxiRepository.save(taxi);
+
+        given()
+            .when()
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .body(bookingRequest)
+            .log().ifValidationFails()
+            .post("/public/bookings")
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     private BookingEntity.BookingEntityBuilder booking() {

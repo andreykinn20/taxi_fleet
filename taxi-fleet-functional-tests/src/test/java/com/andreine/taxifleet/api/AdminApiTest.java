@@ -46,14 +46,14 @@ class AdminApiTest extends BaseFunctionalTest {
         assertThat(taxis).hasSize(2);
         assertThat(taxis.getFirst().id()).isEqualTo(taxi1.getId());
         assertThat(taxis.getFirst().name()).isEqualTo("Taxi 1");
-        assertThat(taxis.getFirst().location().latitude()).isEqualTo(2.0);
-        assertThat(taxis.getFirst().location().longitude()).isEqualTo(1.0);
+        assertThat(taxis.getFirst().location().getLatitude()).isEqualTo(2.0);
+        assertThat(taxis.getFirst().location().getLongitude()).isEqualTo(1.0);
         assertThat(taxis.getFirst().status()).isEqualTo("AVAILABLE");
         assertThat(taxis.getFirst().registeredOnSeconds()).isEqualTo(100L);
         assertThat(taxis.getLast().id()).isEqualTo(taxi2.getId());
         assertThat(taxis.getLast().name()).isEqualTo("Taxi 2");
-        assertThat(taxis.getLast().location().latitude()).isEqualTo(2.0);
-        assertThat(taxis.getLast().location().longitude()).isEqualTo(1.0);
+        assertThat(taxis.getLast().location().getLatitude()).isEqualTo(2.0);
+        assertThat(taxis.getLast().location().getLongitude()).isEqualTo(1.0);
         assertThat(taxis.getLast().status()).isEqualTo("AVAILABLE");
         assertThat(taxis.getLast().registeredOnSeconds()).isEqualTo(100L);
     }

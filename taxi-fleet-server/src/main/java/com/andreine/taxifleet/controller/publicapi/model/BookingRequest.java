@@ -1,20 +1,28 @@
 package com.andreine.taxifleet.controller.publicapi.model;
 
 import com.andreine.taxifleet.controller.common.model.LocationDto;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 /**
  * Booking request.
  */
+@Data
 @Builder
-public record BookingRequest(
+@NoArgsConstructor
+@AllArgsConstructor
+public class BookingRequest {
+
     @NonNull
-    Long userId,
+    private Long userId;
+
     @NonNull
-    LocationDto fromLocation,
+    private LocationDto fromLocation;
+
     @NonNull
-    LocationDto toLocation
-) {
+    private LocationDto toLocation;
 
 }

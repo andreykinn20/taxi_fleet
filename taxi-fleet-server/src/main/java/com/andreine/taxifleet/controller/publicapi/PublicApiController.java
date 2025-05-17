@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -119,7 +120,7 @@ public class PublicApiController {
      * @return NO CONTENT (status code 204)
      */
     @PostMapping("/public/bookings")
-    public ResponseEntity<Void> completeBooking(BookingRequest bookingRequest) {
+    public ResponseEntity<Void> registerBooking(@RequestBody BookingRequest bookingRequest) {
         bookingService.registerBooking(BookingConverter.fromRequest(bookingRequest));
 
         return ResponseEntity.noContent().build();

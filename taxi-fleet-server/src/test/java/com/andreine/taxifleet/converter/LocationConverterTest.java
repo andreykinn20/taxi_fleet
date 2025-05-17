@@ -13,8 +13,8 @@ class LocationConverterTest {
 
         var locationDto = LocationConverter.toDto(location);
 
-        assertThat(locationDto.latitude()).isEqualTo(1.0);
-        assertThat(locationDto.longitude()).isEqualTo(2.0);
+        assertThat(locationDto.getLatitude()).isEqualTo(1.0);
+        assertThat(locationDto.getLongitude()).isEqualTo(2.0);
     }
 
 }

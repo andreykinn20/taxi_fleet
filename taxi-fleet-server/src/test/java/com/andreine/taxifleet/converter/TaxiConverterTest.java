@@ -47,8 +47,8 @@ class TaxiConverterTest {
 
         assertThat(taxiDto.id()).isEqualTo(1L);
         assertThat(taxiDto.name()).isEqualTo("Taxi 1");
-        assertThat(taxiDto.location().latitude()).isEqualTo(10.0);
-        assertThat(taxiDto.location().longitude()).isEqualTo(20.0);
+        assertThat(taxiDto.location().getLatitude()).isEqualTo(10.0);
+        assertThat(taxiDto.location().getLongitude()).isEqualTo(20.0);
         assertThat(taxiDto.status()).isEqualTo("AVAILABLE");
         assertThat(taxiDto.registeredOnSeconds()).isEqualTo(100L);
     }

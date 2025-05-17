@@ -5,6 +5,7 @@ import java.util.List;
 import com.andreine.taxifleet.converter.BookingConverter;
 import com.andreine.taxifleet.integration.kafka.producer.BookingMessageProducer;
 import com.andreine.taxifleet.model.MonthlyBookingStats;
+import com.andreine.taxifleet.persistence.model.BookingEntity;
 import com.andreine.taxifleet.persistence.model.TaxiEntity;
 import com.andreine.taxifleet.persistence.repository.BookingRepository;
 import com.andreine.taxifleet.persistence.repository.TaxiRepository;
@@ -31,11 +32,12 @@ public class BookingService {
      * @param booking booking
      */
     public void registerBooking(Booking booking) {
-        bookingRepository.save(BookingConverter.toEntity(booking));
+        BookingEntity saved = bookingRepository.save(BookingConverter.toEntity(booking));
+        Booking convertedBooking = BookingConverter.fromEntity(saved);
 
         taxiRepository.findAvailable().stream()
             .map(TaxiEntity::getId)
-            .forEach(taxiId -> bookingMessageProducer.publishBookingMessage(booking, taxiId));
+            .forEach(taxiId -> bookingMessageProducer.publishBookingMessage(convertedBooking, taxiId));
     }
 
     /**

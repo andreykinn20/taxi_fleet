@@ -22,7 +22,7 @@ public class BookingMessageProducer {
      * @param taxiId  taxi id
      */
     public void publishBookingMessage(Booking booking, Long taxiId) {
-        var message = BookingMessageDto.builder()
+        BookingMessageDto message = BookingMessageDto.builder()
             .bookingId(booking.id())
             .userId(booking.userId())
             .taxiId(taxiId)

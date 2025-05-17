@@ -80,9 +80,9 @@ public class BookingConverter {
      */
     public static Booking fromRequest(BookingRequest bookingRequest) {
         return Booking.builder()
-            .userId(bookingRequest.userId())
-            .fromLocation(new Location(bookingRequest.fromLocation().latitude(), bookingRequest.fromLocation().longitude()))
-            .toLocation(new Location(bookingRequest.toLocation().latitude(), bookingRequest.toLocation().longitude()))
+            .userId(bookingRequest.getUserId())
+            .fromLocation(new Location(bookingRequest.getFromLocation().getLatitude(), bookingRequest.getFromLocation().getLongitude()))
+            .toLocation(new Location(bookingRequest.getToLocation().getLatitude(), bookingRequest.getToLocation().getLongitude()))
             .status(Booking.BookingStatus.AVAILABLE)
             .build();
     }

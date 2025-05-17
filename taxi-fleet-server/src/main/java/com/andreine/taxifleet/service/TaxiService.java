@@ -5,6 +5,7 @@ import java.util.List;
 import com.andreine.taxifleet.converter.TaxiConverter;
 import com.andreine.taxifleet.exception.IllegalTaxiStatusException;
 import com.andreine.taxifleet.exception.TaxiNotFoundException;
+import com.andreine.taxifleet.persistence.model.TaxiEntity;
 import com.andreine.taxifleet.persistence.model.TaxiStatus;
 import com.andreine.taxifleet.persistence.repository.TaxiRepository;
 import com.andreine.taxifleet.service.model.Taxi;
@@ -37,7 +38,7 @@ public class TaxiService {
      * @param taxiId taxi id
      */
     public void setTaxiUnavailable(long taxiId) {
-        var taxi = taxiRepository.findById(taxiId)
+        TaxiEntity taxi = taxiRepository.findById(taxiId)
             .orElseThrow(() -> new TaxiNotFoundException(taxiId));
 
         if (!TaxiStatus.AVAILABLE.equals(taxi.getStatus())) {
@@ -55,7 +56,7 @@ public class TaxiService {
      * @param taxiId taxi id
      */
     public void setTaxiAvailable(long taxiId) {
-        var taxi = taxiRepository.findById(taxiId)
+        TaxiEntity taxi = taxiRepository.findById(taxiId)
             .orElseThrow(() -> new TaxiNotFoundException(taxiId));
 
         if (!TaxiStatus.UNAVAILABLE.equals(taxi.getStatus())) {
