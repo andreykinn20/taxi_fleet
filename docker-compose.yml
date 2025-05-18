@@ -1,0 +1,59 @@
+services:
+  service-db:
+    image: postgres:14.7-alpine
+    environment:
+      POSTGRES_USER: taxi_fleet
+      POSTGRES_PASSWORD: taxi_fleet
+    ports:
+      - "15432:5432"
+    volumes:
+      - ./infrastructure/db/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+      - db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d taxi_fleet_db -U taxi_fleet"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+  service:
+    build: ./
+    container_name: taxi-fleet
+    ports:
+      - "8080:8080"
+    depends_on:
+      service-db:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/taxi_fleet_db
+      - SPRING_LIQUIBASE_CONTEXTS=main,demo
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    healthcheck:
+      test: [ "CMD-SHELL", "echo 'test-message' | kafka-console-producer.sh --broker-list localhost:9092 --topic health-check-topic && kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic health-check-topic --from-beginning --max-messages 1 | grep 'test-message'" ]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9092,OUTSIDE://localhost:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "taxi_fleet_booking_created"
+
+volumes:
+  db-data:

@@ -126,4 +126,18 @@ public class PublicApiController {
         return ResponseEntity.noContent().build();
     }
 
+
+    /**
+     * POST /public/bookings/{bookingId}/cancel: cancels booking.
+     *
+     * @param bookingId booking id (required)
+     * @return NO CONTENT (status code 204)
+     */
+    @PostMapping("/public/bookings/{bookingId}/cancel")
+    public ResponseEntity<Void> cancelBooking(@PathVariable Long bookingId) {
+        bookingService.cancelBooking(bookingId);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }

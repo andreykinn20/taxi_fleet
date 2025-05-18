@@ -188,13 +188,11 @@ class PublicApiTest extends BaseFunctionalTest {
             .statusCode(HttpStatus.NO_CONTENT.value());
 
         assertThat(bookingRepository.findById(savedBooking.getId()))
-            .hasValueSatisfying(acceptedBooking -> {
-                assertThat(acceptedBooking.getStatus()).isEqualTo(BookingStatus.COMPLETED);
-            });
+            .hasValueSatisfying(acceptedBooking ->
+                assertThat(acceptedBooking.getStatus()).isEqualTo(BookingStatus.COMPLETED));
         assertThat(taxiRepository.findById(savedTaxi.getId()))
-            .hasValueSatisfying(acceptedTaxi -> {
-                assertThat(acceptedTaxi.getStatus()).isEqualTo(TaxiStatus.AVAILABLE);
-            });
+            .hasValueSatisfying(acceptedTaxi ->
+                assertThat(acceptedTaxi.getStatus()).isEqualTo(TaxiStatus.AVAILABLE));
     }
 
     @Test
@@ -234,6 +232,33 @@ class PublicApiTest extends BaseFunctionalTest {
         assertThat(bookingMessage.toLocation().latitude()).isEqualTo(10.0);
         assertThat(bookingMessage.toLocation().longitude()).isEqualTo(20.0);
         assertThat(bookingMessage.createdOnTs()).isPositive();
+    }
+
+    @Test
+    void shouldCancelBooking() throws InterruptedException {
+        var taxi = taxi()
+            .status(TaxiStatus.BOOKED)
+            .build();
+        var savedTaxi = taxiRepository.save(taxi);
+        var booking = booking()
+            .taxiId(savedTaxi.getId())
+            .status(BookingStatus.ACCEPTED)
+            .build();
+        var savedBooking = bookingRepository.save(booking);
+
+        given()
+            .when()
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .post("/public/bookings/{bookingId}/cancel", savedBooking.getId())
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
+
+        assertThat(bookingRepository.findById(savedBooking.getId()))
+            .hasValueSatisfying(acceptedBooking ->
+                assertThat(acceptedBooking.getStatus()).isEqualTo(BookingStatus.CANCELLED));
+        assertThat(taxiRepository.findById(savedTaxi.getId()))
+            .hasValueSatisfying(acceptedTaxi ->
+                assertThat(acceptedTaxi.getStatus()).isEqualTo(TaxiStatus.AVAILABLE));
     }
 
     private BookingEntity.BookingEntityBuilder booking() {

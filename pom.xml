@@ -12,7 +12,7 @@
 
     <groupId>com.andreine</groupId>
     <artifactId>taxi-fleet</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
 
@@ -21,6 +21,8 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <springdoc-openapi-starter-webmvc-ui.version>2.8.8</springdoc-openapi-starter-webmvc-ui.version>
+        <start-class>com.andreine.taxifleet.TaxiFleetApplication</start-class>
     </properties>
 
     <modules>
@@ -39,6 +41,12 @@
             </dependency>
             <dependency>
                 <groupId>com.andreine</groupId>
+                <artifactId>taxi-fleet-bundle</artifactId>
+                <classifier>original</classifier>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.andreine</groupId>
                 <artifactId>taxi-fleet-server</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -46,6 +54,11 @@
                 <groupId>com.andreine</groupId>
                 <artifactId>taxi-fleet-liquibase</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

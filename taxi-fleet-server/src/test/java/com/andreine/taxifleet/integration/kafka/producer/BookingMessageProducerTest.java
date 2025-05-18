@@ -39,6 +39,7 @@ class BookingMessageProducerTest {
             .build();
         var bookingMessageDto = BookingMessageDto.builder()
             .bookingId(1L)
+            .taxiId(3L)
             .userId(2L)
             .createdOnTs(100500L)
             .fromLocation(new Location(10.0, 20.0))
