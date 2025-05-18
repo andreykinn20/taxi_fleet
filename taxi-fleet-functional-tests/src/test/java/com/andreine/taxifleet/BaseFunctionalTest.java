@@ -18,7 +18,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
     classes = {
-        BingoEventRecompletionApplication.class,
+        TaxiFleetApplication.class,
         KafkaConsumerConfig.class
     }
 )
