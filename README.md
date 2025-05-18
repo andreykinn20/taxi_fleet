@@ -10,4 +10,5 @@ __Usage__
 
 `GET http://localhost:8080/swagger-ui/index.html` leads to the swagger page
 
+`docker-compose down` will close the container
 `docker-compose down -v --rmi 'all'` will close the container and delete the old image
