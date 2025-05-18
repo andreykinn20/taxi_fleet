@@ -22,6 +22,7 @@
             <groupId>com.andreine</groupId>
             <artifactId>taxi-fleet-bundle</artifactId>
             <scope>test</scope>
+            <classifier>original</classifier>
         </dependency>
 
         <dependency>

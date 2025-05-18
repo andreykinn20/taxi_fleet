@@ -29,6 +29,7 @@
         <module>taxi-fleet-liquibase</module>
         <module>taxi-fleet-server</module>
         <module>taxi-fleet-bundle</module>
+        <module>taxi-fleet-functional-tests</module>
     </modules>
 
     <dependencyManagement>
@@ -36,6 +37,12 @@
             <dependency>
                 <groupId>com.andreine</groupId>
                 <artifactId>taxi-fleet-bundle</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.andreine</groupId>
+                <artifactId>taxi-fleet-bundle</artifactId>
+                <classifier>original</classifier>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
