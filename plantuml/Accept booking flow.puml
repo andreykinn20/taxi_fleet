@@ -1,0 +1,32 @@
+@startuml
+!pragma layout smetana
+state "Start\naccept booking" as Start
+
+[*] --> Start
+
+state "Booking loaded" as BookingLoaded
+Start --> BookingLoaded : Load booking
+
+state "Taxi loaded" as TaxiLoaded
+BookingLoaded --> TaxiLoaded : Load taxi
+
+state "Check booking status" as CheckBooking
+TaxiLoaded --> CheckBooking
+
+state "Error:\nbooking is not available" as ErrBooking
+CheckBooking --> ErrBooking : Booking status \nis not AVAILABLE
+ErrBooking --> [*]
+
+state "Check taxi status" as CheckTaxi
+CheckBooking --> CheckTaxi : Booking status is AVAILABLE
+
+state "Error:\ntaxi is not available" as ErrTaxi
+CheckTaxi --> ErrTaxi : Taxi status \nis not AVAILABLE
+ErrTaxi --> [*]
+
+state "Save statuses" as Save
+CheckTaxi --> Save : All checks passed
+
+Save --> [*] : Ready
+
+@enduml
