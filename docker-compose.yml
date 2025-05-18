@@ -24,7 +24,7 @@ services:
       service-db:
         condition: service_healthy
     environment:
-      - SERVER_PORT=8181
+      - SERVER_PORT=8080
       - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/taxi_fleet_db
 
 volumes:

@@ -9,7 +9,6 @@ RUN mvn clean install -Pdocker -Dmaven.test.skip=true
 
 FROM amazoncorretto:21-alpine
 COPY --from=builder /tmp/taxi-fleet-bundle/target/taxi-fleet.jar app.jar
-
 RUN sh -c 'touch /app.jar'
-
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","/app.jar"]
