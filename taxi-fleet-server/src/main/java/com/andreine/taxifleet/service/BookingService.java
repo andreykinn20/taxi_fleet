@@ -48,7 +48,7 @@ public class BookingService {
             .map(TaxiEntity::getId)
             .forEach(taxiId -> bookingMessageProducer.publishBookingMessage(convertedBooking, taxiId));
 
-        log.info("Taxi {} was successfully registered", booking.id());
+        log.info("Booking {} was successfully registered", convertedBooking.id());
     }
 
     /**
