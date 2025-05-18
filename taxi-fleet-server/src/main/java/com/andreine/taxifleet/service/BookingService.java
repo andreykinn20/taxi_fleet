@@ -17,12 +17,14 @@ import com.andreine.taxifleet.service.model.Booking;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 /**
  * Booking service.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookingService {
@@ -45,6 +47,8 @@ public class BookingService {
         taxiRepository.findAvailable().stream()
             .map(TaxiEntity::getId)
             .forEach(taxiId -> bookingMessageProducer.publishBookingMessage(convertedBooking, taxiId));
+
+        log.info("Taxi {} was successfully registered", booking.id());
     }
 
     /**
@@ -75,6 +79,8 @@ public class BookingService {
                 .status(TaxiStatus.AVAILABLE)
                 .build()));
         }
+
+        log.info("Booking {} was cancelled, taxi {}", bookingId, taxiId);
     }
 
     /**

@@ -8,6 +8,7 @@ import lombok.Builder;
  */
 @Builder
 public record BookingMessageDto(
+    long taxiId,
     long bookingId,
     long userId,
     Location fromLocation,
