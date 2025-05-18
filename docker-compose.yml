@@ -4,7 +4,7 @@ services:
     image: taxi-fleet:1.0.0
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: taxi-fleet-bundle/Dockerfile
     ports:
       - "8181:8181"
     depends_on:
