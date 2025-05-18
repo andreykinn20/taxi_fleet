@@ -1,0 +1,13 @@
+@startuml
+!pragma layout smetana
+database "Postgres" as db
+queue "Kafka" as kafka
+component "BookingService" as booking
+
+db -[hidden]-> kafka
+
+booking -down-> db : [1] Registers booking
+booking -down-> db : [2] Get active taxis
+booking -right-> kafka : [3] Send notification for\neach active taxi
+
+@enduml
