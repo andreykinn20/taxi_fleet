@@ -26,6 +26,7 @@ services:
     environment:
       - SERVER_PORT=8080
       - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/taxi_fleet_db
+      - SPRING_LIQUIBASE_CONTEXTS=main,demo
 
 volumes:
   db-data:

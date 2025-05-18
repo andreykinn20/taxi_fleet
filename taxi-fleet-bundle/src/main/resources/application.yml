@@ -1,7 +1,7 @@
 spring:
   liquibase:
     change-log: "classpath:liquibase/db/changelog/changelog.xml"
-    contexts: main,demo
+    contexts: main
   datasource:
     url: jdbc:postgresql://localhost:15432/taxi_fleet_db
     username: taxi_fleet
