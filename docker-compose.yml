@@ -1,19 +1,5 @@
-version: '3.8'
 services:
-  service:
-    image: taxi-fleet:1.0.0
-    build:
-      context: .
-      dockerfile: taxi-fleet-bundle/Dockerfile
-    ports:
-      - "8181:8181"
-    depends_on:
-      - service-db
-    environment:
-      - SERVER_PORT= 8181
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/taxi_fleet_db
-
-  service-db:
+  taxi-fleet-db:
     image: postgres:14.7-alpine
     environment:
       POSTGRES_USER: username
@@ -24,6 +10,22 @@ services:
       - ./infrastructure/db/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
       - db-data:/var/lib/postgresql/data
     restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "username", "-d", "postgres" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+  taxi-fleet:
+    build: ./
+    container_name: taxi-fleet
+    ports:
+      - "8080:8080"
+    depends_on:
+      taxi-fleet-db:
+        condition: service_healthy
+    environment:
+      - SERVER_PORT=8181
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/taxi_fleet_db
 
 volumes:
   db-data:
