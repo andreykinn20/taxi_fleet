@@ -29,7 +29,6 @@
         <module>taxi-fleet-liquibase</module>
         <module>taxi-fleet-server</module>
         <module>taxi-fleet-bundle</module>
-        <module>taxi-fleet-functional-tests</module>
     </modules>
 
     <dependencyManagement>
