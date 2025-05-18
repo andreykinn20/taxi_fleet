@@ -1,31 +1,31 @@
 services:
-  taxi-fleet-db:
+  service-db:
     image: postgres:14.7-alpine
     environment:
       POSTGRES_USER: taxi_fleet
       POSTGRES_PASSWORD: taxi_fleet
     ports:
-      - "15432:5432"
+      - "5432:5432"
     volumes:
       - ./infrastructure/db/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
       - db-data:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "taxi_fleet", "-d", "taxi_fleet" ]
+      test: ["CMD-SHELL", "pg_isready -d taxi_fleet_db -U taxi_fleet"]
       interval: 5s
       timeout: 3s
       retries: 5
-  taxi-fleet:
+  service:
     build: ./
     container_name: taxi-fleet
     ports:
       - "8080:8080"
     depends_on:
-      taxi-fleet-db:
+      service-db:
         condition: service_healthy
     environment:
       - SERVER_PORT=8181
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://taxi-fleet-db/taxi_fleet_db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/taxi_fleet_db
 
 volumes:
   db-data:
